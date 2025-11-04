@@ -1,26 +1,25 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Viking Theme - Nordic/Medieval inspired colors */
+.viking {
+  /* Primary colors - deep burgundy/blood red and bronze */
+  --viking-primary: #8B1A1A; /* Deep blood red */
+  --viking-secondary: #CD7F32; /* Bronze */
+  --viking-accent: #DAA520; /* Goldenrod */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Backgrounds - dark wood and stone tones */
+  --viking-bg-primary: #1A1410; /* Almost black with brown undertone */
+  --viking-bg-secondary: #2B1F17; /* Dark wood brown */
+  --viking-bg-card: #3D2B1F; /* Lighter brown for cards */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  /* Text colors */
+  --viking-text-primary: #F5E6D3; /* Aged parchment */
+  --viking-text-secondary: #D4BFA0; /* Faded parchment */
+  --viking-text-muted: #9B8767; /* Muted tan */
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Borders and accents */
+  --viking-border: #5C4A35; /* Dark brown border */
+  --viking-border-light: #7A6548; /* Lighter brown */
 }

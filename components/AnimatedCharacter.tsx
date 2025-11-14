@@ -134,7 +134,7 @@ export default function AnimatedCharacter({ animationState, onWaveComplete, onCl
   return (
     <div className="relative flex items-center">
       <div
-        className="relative w-32 h-32 cursor-pointer hover:scale-105 transition-transform"
+        className="relative w-24 h-24 sm:w-32 sm:h-32 cursor-pointer hover:scale-105 transition-transform"
         onClick={handleClick}
         role="button"
         tabIndex={0}
@@ -154,17 +154,31 @@ export default function AnimatedCharacter({ animationState, onWaveComplete, onCl
         />
       </div>
 
-      {/* Speech Bubble */}
+      {/* Speech Bubble - Positioned above on mobile, to the right on desktop */}
       {showBubble && (
-        <div className="absolute left-full ml-4 top-6 animate-in fade-in slide-in-from-left-2 duration-300">
-          <div className="relative bg-white dark:bg-stone-700 viking:bg-[#3D2B1F] rounded-2xl px-4 py-3 shadow-lg viking:shadow-[#8B1A1A]/30 viking:border viking:border-[#5C4A35] min-w-[180px]">
-            <p className="text-stone-800 dark:text-stone-100 viking:text-[#F5E6D3] font-medium text-sm whitespace-nowrap">
-              {greeting}
-            </p>
-            {/* Speech bubble tail */}
-            <div className="absolute left-0 top-1/2 -translate-x-2 -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-white dark:border-r-stone-700 viking:border-r-[#3D2B1F]"></div>
+        <>
+          {/* Mobile: Above character */}
+          <div className="sm:hidden absolute left-1/2 -translate-x-1/2 bottom-full mb-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="relative bg-white dark:bg-stone-700 viking:bg-[#3D2B1F] rounded-2xl px-3 py-2 shadow-lg viking:shadow-[#8B1A1A]/30 viking:border viking:border-[#5C4A35] max-w-[180px]">
+              <p className="text-stone-800 dark:text-stone-100 viking:text-[#F5E6D3] font-medium text-xs sm:text-sm text-center">
+                {greeting}
+              </p>
+              {/* Speech bubble tail pointing down */}
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-white dark:border-t-stone-700 viking:border-t-[#3D2B1F]"></div>
+            </div>
           </div>
-        </div>
+
+          {/* Desktop: To the right of character */}
+          <div className="hidden sm:block absolute left-full ml-4 top-6 animate-in fade-in slide-in-from-left-2 duration-300">
+            <div className="relative bg-white dark:bg-stone-700 viking:bg-[#3D2B1F] rounded-2xl px-4 py-3 shadow-lg viking:shadow-[#8B1A1A]/30 viking:border viking:border-[#5C4A35] min-w-[180px]">
+              <p className="text-stone-800 dark:text-stone-100 viking:text-[#F5E6D3] font-medium text-sm whitespace-nowrap">
+                {greeting}
+              </p>
+              {/* Speech bubble tail pointing left */}
+              <div className="absolute left-0 top-1/2 -translate-x-2 -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8 border-r-white dark:border-r-stone-700 viking:border-r-[#3D2B1F]"></div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

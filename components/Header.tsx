@@ -51,135 +51,172 @@ export default function Header({ language, onLanguageChange, currentView, onView
 
   return (
     <header className="sticky top-0 z-50 bg-stone-800 viking:bg-[#2B1F17] text-stone-50 viking:text-[#F5E6D3] px-4 py-3 shadow-lg viking:shadow-[#5C4A35]/50">
-      <div className="max-w-7xl mx-auto grid grid-cols-3 items-center">
-        {/* Left: Logo */}
-        <div className="flex items-center gap-2">
-          <div className="relative w-8 h-8">
-            <Image
-              src="/logo/valhalla.jpg"
-              alt="Valhalla Beer Club Logo"
-              fill
-              className="object-contain"
-              priority
-            />
+      <div className="max-w-7xl mx-auto">
+        {/* Mobile and Desktop Layout */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Left: Logo */}
+          <div className="flex items-center gap-2 min-w-0 flex-shrink">
+            <div className="relative w-8 h-8 flex-shrink-0">
+              <Image
+                src="/logo/valhalla.jpg"
+                alt="Valhalla Beer Club Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <h1 className="text-lg sm:text-xl font-bold truncate">
+              <span className="hidden sm:inline">Valhalla Beer Club</span>
+              <span className="sm:hidden">Valhalla</span>
+            </h1>
           </div>
-          <h1 className="text-xl font-bold">Valhalla Beer Club</h1>
+
+          {/* Center: Navigation - Hidden on mobile, shown on md+ */}
+          <div className="hidden md:flex items-center justify-center gap-4 lg:gap-6">
+            <button
+              onClick={() => onViewChange('chat')}
+              className="hover:underline transition text-sm lg:text-base"
+            >
+              Chat
+            </button>
+
+            <button
+              onClick={() => onViewChange('menu')}
+              className="hover:underline transition text-sm lg:text-base"
+            >
+              Menu
+            </button>
+
+            <button
+              onClick={() => onViewChange('team')}
+              className="hover:underline transition text-sm lg:text-base"
+            >
+              Team
+            </button>
+
+            <button
+              onClick={() => onViewChange('contacts')}
+              className="hover:underline transition text-sm lg:text-base"
+            >
+              Contacts
+            </button>
+          </div>
+
+          {/* Right: Settings */}
+          <div className="flex items-center justify-end gap-2 sm:gap-4 flex-shrink-0">
+            {/* Theme Selector */}
+            <div className="relative" ref={themeRef}>
+              <button
+                onClick={() => setIsThemeOpen(!isThemeOpen)}
+                className="flex items-center gap-1 hover:underline transition"
+                aria-label="Select theme"
+              >
+                {getThemeIcon()}
+                <ChevronDown className="w-4 h-4 hidden sm:inline" />
+              </button>
+              {isThemeOpen && (
+                <div className="absolute right-0 mt-1 bg-stone-700 rounded shadow-lg overflow-hidden z-10 min-w-[120px]">
+                  <button
+                    onClick={() => {
+                      setTheme('light');
+                      setIsThemeOpen(false);
+                    }}
+                    className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-stone-600 transition"
+                  >
+                    <Sun className="w-4 h-4" />
+                    Light
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTheme('dark');
+                      setIsThemeOpen(false);
+                    }}
+                    className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-stone-600 transition"
+                  >
+                    <Moon className="w-4 h-4" />
+                    Dark
+                  </button>
+                  <button
+                    onClick={() => {
+                      setTheme('viking');
+                      setIsThemeOpen(false);
+                    }}
+                    className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-stone-600 transition"
+                  >
+                    <Axe className="w-4 h-4" />
+                    Viking
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Language Selector */}
+            <div className="relative hidden sm:block" ref={languageRef}>
+              <button
+                onClick={() => setIsLanguageOpen(!isLanguageOpen)}
+                className="flex items-center gap-1 hover:underline transition"
+              >
+                {language}
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              {isLanguageOpen && (
+                <div className="absolute right-0 mt-1 bg-stone-700 rounded shadow-lg overflow-hidden z-10">
+                  <button
+                    onClick={() => {
+                      onLanguageChange('EN');
+                      setIsLanguageOpen(false);
+                    }}
+                    className="block w-full px-4 py-2 text-left hover:bg-stone-600 transition"
+                  >
+                    EN
+                  </button>
+                  <button
+                    onClick={() => {
+                      onLanguageChange('CS');
+                      setIsLanguageOpen(false);
+                    }}
+                    className="block w-full px-4 py-2 text-left hover:bg-stone-600 transition"
+                  >
+                    CS
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <button className="hover:underline transition hidden sm:inline text-sm lg:text-base">
+              Login
+            </button>
+          </div>
         </div>
 
-        {/* Center: Navigation */}
-        <div className="flex items-center justify-center gap-6">
+        {/* Mobile Navigation - Shown only on small screens */}
+        <div className="md:hidden flex items-center justify-center gap-4 mt-3 pt-3 border-t border-stone-600">
           <button
             onClick={() => onViewChange('chat')}
-            className="hover:underline transition"
+            className={`hover:underline transition text-sm ${currentView === 'chat' ? 'underline font-semibold' : ''}`}
           >
             Chat
           </button>
 
           <button
             onClick={() => onViewChange('menu')}
-            className="hover:underline transition"
+            className={`hover:underline transition text-sm ${currentView === 'menu' ? 'underline font-semibold' : ''}`}
           >
             Menu
           </button>
 
           <button
             onClick={() => onViewChange('team')}
-            className="hover:underline transition"
+            className={`hover:underline transition text-sm ${currentView === 'team' ? 'underline font-semibold' : ''}`}
           >
             Team
           </button>
 
           <button
             onClick={() => onViewChange('contacts')}
-            className="hover:underline transition"
+            className={`hover:underline transition text-sm ${currentView === 'contacts' ? 'underline font-semibold' : ''}`}
           >
             Contacts
-          </button>
-        </div>
-
-        {/* Right: Settings */}
-        <div className="flex items-center justify-end gap-4">
-          {/* Theme Selector */}
-          <div className="relative" ref={themeRef}>
-            <button
-              onClick={() => setIsThemeOpen(!isThemeOpen)}
-              className="flex items-center gap-1 hover:underline transition"
-              aria-label="Select theme"
-            >
-              {getThemeIcon()}
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            {isThemeOpen && (
-              <div className="absolute right-0 mt-1 bg-stone-700 rounded shadow-lg overflow-hidden z-10 min-w-[120px]">
-                <button
-                  onClick={() => {
-                    setTheme('light');
-                    setIsThemeOpen(false);
-                  }}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-stone-600 transition"
-                >
-                  <Sun className="w-4 h-4" />
-                  Light
-                </button>
-                <button
-                  onClick={() => {
-                    setTheme('dark');
-                    setIsThemeOpen(false);
-                  }}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-stone-600 transition"
-                >
-                  <Moon className="w-4 h-4" />
-                  Dark
-                </button>
-                <button
-                  onClick={() => {
-                    setTheme('viking');
-                    setIsThemeOpen(false);
-                  }}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-stone-600 transition"
-                >
-                  <Axe className="w-4 h-4" />
-                  Viking
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Language Selector */}
-          <div className="relative" ref={languageRef}>
-            <button
-              onClick={() => setIsLanguageOpen(!isLanguageOpen)}
-              className="flex items-center gap-1 hover:underline transition"
-            >
-              {language}
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            {isLanguageOpen && (
-              <div className="absolute right-0 mt-1 bg-stone-700 rounded shadow-lg overflow-hidden z-10">
-                <button
-                  onClick={() => {
-                    onLanguageChange('EN');
-                    setIsLanguageOpen(false);
-                  }}
-                  className="block w-full px-4 py-2 text-left hover:bg-stone-600 transition"
-                >
-                  EN
-                </button>
-                <button
-                  onClick={() => {
-                    onLanguageChange('CS');
-                    setIsLanguageOpen(false);
-                  }}
-                  className="block w-full px-4 py-2 text-left hover:bg-stone-600 transition"
-                >
-                  CS
-                </button>
-              </div>
-            )}
-          </div>
-
-          <button className="hover:underline transition">
-            Login
           </button>
         </div>
       </div>

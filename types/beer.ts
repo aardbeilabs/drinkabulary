@@ -13,6 +13,7 @@ export interface Beer {
 export interface Message {
   role: 'user' | 'assistant';
   content: string;
+  beers?: Beer[];  // Optional recommended beers for assistant messages
 }
 
 export type View = 'chat' | 'menu' | 'team' | 'contacts';

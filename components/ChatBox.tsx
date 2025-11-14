@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import type { Message, Beer } from '@/types/beer';
+import BeerCard from './BeerCard';
 
 interface ChatBoxProps {
   onAnimationStateChange: (state: 'idle' | 'thinking' | 'talking') => void;
@@ -41,7 +42,11 @@ export default function ChatBox({ onAnimationStateChange }: ChatBoxProps) {
       });
 
       const data = await chatRes.json();
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
+      setMessages((prev) => [...prev, {
+        role: 'assistant',
+        content: data.response,
+        beers: data.recommendedBeers || []
+      }]);
 
       // Show talking animation when response arrives
       onAnimationStateChange('talking');
@@ -80,21 +85,30 @@ export default function ChatBox({ onAnimationStateChange }: ChatBoxProps) {
   return (
     <div className="bg-white dark:bg-stone-800 viking:bg-[#3D2B1F] rounded-lg shadow-lg viking:shadow-[#8B1A1A]/30 p-3 sm:p-4 w-full mx-auto transition-colors viking:border viking:border-[#5C4A35]">
       {(messages.length > 0 || isLoading) && (
-        <div className="h-40 sm:h-48 overflow-y-auto mb-3 sm:mb-4 space-y-2 sm:space-y-3">
+        <div className="h-64 sm:h-96 overflow-y-auto mb-3 sm:mb-4 space-y-2 sm:space-y-3">
           {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+            <div key={idx}>
               <div
-                className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-3 py-2 sm:px-4 text-sm sm:text-base ${
-                  msg.role === 'user'
-                    ? 'bg-stone-700 dark:bg-stone-600 viking:bg-[#8B1A1A] text-white viking:text-[#F5E6D3]'
-                    : 'bg-stone-100 dark:bg-stone-700 viking:bg-[#2B1F17] text-stone-900 dark:text-stone-100 viking:text-[#F5E6D3]'
-                }`}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {msg.content}
+                <div
+                  className={`max-w-[85%] sm:max-w-[80%] rounded-lg px-3 py-2 sm:px-4 text-sm sm:text-base ${
+                    msg.role === 'user'
+                      ? 'bg-stone-700 dark:bg-stone-600 viking:bg-[#8B1A1A] text-white viking:text-[#F5E6D3]'
+                      : 'bg-stone-100 dark:bg-stone-700 viking:bg-[#2B1F17] text-stone-900 dark:text-stone-100 viking:text-[#F5E6D3]'
+                  }`}
+                >
+                  {msg.content}
+                </div>
               </div>
+              {/* Display beer cards if this is an assistant message with recommendations */}
+              {msg.role === 'assistant' && msg.beers && msg.beers.length > 0 && (
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {msg.beers.map((beer) => (
+                    <BeerCard key={beer.id} beer={beer} />
+                  ))}
+                </div>
+              )}
             </div>
           ))}
           {isLoading && (

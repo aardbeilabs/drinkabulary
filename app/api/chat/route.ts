@@ -37,18 +37,36 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    // Format beer catalog for context
+    // Format beer catalog for context with IDs
     const beerCatalog = beers.map(beer =>
-      `${beer.name} by ${beer.brewery} - ${beer.style}, ABV: ${beer.abv}, Price: ${beer.price}€, Category: ${beer.category}`
+      `[ID: ${beer.id}] ${beer.name} by ${beer.brewery} - ${beer.style}, ABV: ${beer.abv}, Price: ${beer.price}€, Category: ${beer.category}`
     ).join('\n');
 
     const result = await chat.sendMessage(
       `Available beers:\n${beerCatalog}\n\nUser message: ${message}`
     );
 
-    const response = result.response.text();
+    let response = result.response.text();
 
-    return NextResponse.json({ response });
+    // Parse beer IDs from the tagged format: RECOMMENDED_BEERS: id1,id2
+    const tagMatch = response.match(/RECOMMENDED_BEERS:\s*([\d,\s]+)/);
+    let recommendedBeers: Beer[] = [];
+
+    if (tagMatch) {
+      // Extract IDs from the tag
+      const idsString = tagMatch[1].trim();
+      const ids = idsString.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
+
+      // Match beers by ID, limit to maximum of 2
+      recommendedBeers = beers
+        .filter(beer => ids.includes(beer.id))
+        .slice(0, 2);
+
+      // Remove the tag from the response so users don't see it
+      response = response.replace(/RECOMMENDED_BEERS:\s*[\d,\s]+/g, '').trim();
+    }
+
+    return NextResponse.json({ response, recommendedBeers });
   } catch (error) {
     console.error('Gemini API error:', error);
     return NextResponse.json(
